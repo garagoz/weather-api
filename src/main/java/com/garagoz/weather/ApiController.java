@@ -13,6 +13,6 @@ public class ApiController {
 
     @GetMapping("/welcome")
     public String WelcomeMessage() {
-        return "Welcome Arslanmyrat!";
+        return "Welcome Arslanmyrat! ";
     }
 }
