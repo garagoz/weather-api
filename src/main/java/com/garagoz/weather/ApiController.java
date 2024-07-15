@@ -10,4 +10,9 @@ public class ApiController {
     public String ShowMessage() {
         return "Hello Arslan!";
     }
+
+    @GetMapping("/welcome")
+    public String WelcomeMessage() {
+        return "Welcome Arslanmyrat!";
+    }
 }
