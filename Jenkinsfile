@@ -1,64 +1,37 @@
 pipeline {
     agent any
 
-    environment {
-        DOCKER_REGISTRY = 'https://index.docker.io/v1/'
-        DOCKER_REPO = 'atorayew/weather-api'
-        DOCKER_IMAGE = 'weather-api'
-        DOCKER_TAG = 'latest'
-        GIT_CREDENTIALS_ID = 'git_credentials_id'
-        DOCKER_CREDENTIALS_ID = 'docker_credentials_id'
+    tools {
+        maven 'maven-3.9.8'
     }
 
     stages {
-        stage('Checkout') {
+        stage('Build Maven') {
             steps {
-                checkout scm
+                checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/garagoz/weather-api']])
+                sh 'mvn clean install'
             }
         }
 
-        stage('Maven Build') {
+        stage('Build Docker image') {
             steps {
                 script {
-                    sh 'mvn clean package'
+                    sh 'docker build -t atorayew/weather-api .'
                 }
             }
+
         }
 
-        stage('Build Docker Image') {
+        stage('Push docker image') {
             steps {
                 script {
-                    dockerImage = docker.build("${DOCKER_REPO}/${DOCKER_IMAGE}:${DOCKER_TAG}")
-                }
-            }
-        }
-
-        stage('Login to Docker Registry') {
-            steps {
-                script {
-                    docker.withRegistry(DOCKER_REGISTRY, DOCKER_CREDENTIALS_ID) {
-                        // No operation, just login
+                    withCredentials([string(credentialsId: 'dockerhub-pwd', variable: 'dockerhubpwd')]) {
+                        sh 'docker login -u atorayew@gmail.com -p ${dockerhubpwd}'
+                        sh 'docker push atorayew/weather-api'
                     }
                 }
             }
-        }
 
-        stage('Push Docker Image') {
-            steps {
-                script {
-                    docker.withRegistry(DOCKER_REGISTRY, DOCKER_CREDENTIALS_ID) {
-                        dockerImage.push()
-                        dockerImage.push('latest') // Also tag as latest
-                    }
-                }
-            }
-        }
-
-    }
-
-    post {
-        always {
-            cleanWs()
         }
     }
 }
