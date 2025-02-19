@@ -9,5 +9,5 @@ public class WeatherApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(WeatherApplication.class, args);
 	}
-
+// http://localhost:8080/weather?city=London
 }

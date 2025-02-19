@@ -6,13 +6,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class ApiController {
 
-    @GetMapping("/test")
+    @GetMapping("/hello")
     public String ShowMessage() {
         return "Hello Arslan!";
     }
 
     @GetMapping("/welcome")
     public String WelcomeMessage() {
-        return "Welcome Arslanmyrat! ";
+        return "Welcome Arslan! ";
     }
 }
