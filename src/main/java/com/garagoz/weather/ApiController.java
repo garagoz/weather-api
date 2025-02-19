@@ -8,11 +8,11 @@ public class ApiController {
 
     @GetMapping("/hello")
     public String ShowMessage() {
-        return "Hello Arslan!";
+        return "Hello World!";
     }
 
     @GetMapping("/welcome")
     public String WelcomeMessage() {
-        return "Welcome Arslan! ";
+        return "Welcome World! ";
     }
 }
